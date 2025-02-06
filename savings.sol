@@ -34,27 +34,7 @@ contract SavingsContract {
         emit FixedDeposit(msg.sender, msg.value, timeLock);
     }
     
-    function withdraw(uint256 amount) external {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] -= amount;
-        payable(msg.sender).transfer(amount);
-        emit Withdrawn(msg.sender, amount);
-    }
-    
-    function withdrawFixedDeposit() external {
-        require(block.timestamp >= fixedDepositRelease[msg.sender], "Deposit is still locked");
-        require(fixedDeposits[msg.sender] > 0, "No fixed deposit available");
-        uint256 amount = fixedDeposits[msg.sender];
-        fixedDeposits[msg.sender] = 0;
-        fixedDepositRelease[msg.sender] = 0;
-        payable(msg.sender).transfer(amount);
-        emit Withdrawn(msg.sender, amount);
-    }
-    
-    function withdrawContractBalance(uint256 amount) external onlyOwner {
-        require(address(this).balance >= amount, "Insufficient contract balance");
-        payable(owner).transfer(amount);
-    }
+   
 
     function getBalances(address user) external view returns (uint256[] memory) {
         uint256[] memory userBalances = new uint256[](2);
